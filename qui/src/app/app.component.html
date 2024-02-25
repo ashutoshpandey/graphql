@@ -1,0 +1,19 @@
+<div class='todo-app'>
+  <header>Todo app</header>
+  <div class='todo-app__container'>
+    <button 
+      (click)="openAddModal()">
+      Add todo +
+    </button>
+    <div class='todo-app__todos'>
+      <app-todo
+        *ngFor="let todo of todos"
+        [id]="todo.id"
+        [title]="todo.title" 
+        [description]="todo.description" 
+        [completed]="todo.completed" 
+      ></app-todo>
+    </div>
+  </div>
+  <app-todo-add [onClose]="handleAddModalClose.bind(this)" *ngIf="isAddModalOpen"></app-todo-add>
+</div>

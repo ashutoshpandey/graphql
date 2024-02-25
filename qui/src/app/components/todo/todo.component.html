@@ -1,0 +1,47 @@
+<div [class.todo--borderColor]="checked" class="todo">
+  <div>
+    <input 
+      id="checkbox-{{id}}"
+      class='checkbox-custom'
+      name="checkbox" 
+      type="checkbox" />
+    <label 
+      htmlFor="checkbox-{{id}}" 
+      [class.checked]="checked"
+      class="checkbox-custom-label" 
+      (click)="completeTodo()" ></label>
+  </div>
+  <div class='todo__body'>
+    <h2>{{title}}</h2>
+    <p>{{description}}</p>
+    <div class='todo__buttons'>
+      <div class='todo__deleteNedit'>
+        <button 
+          class='todo__editButton' 
+          (click)="editTodo()">
+          Edit
+        </button>
+        <button class='todo__deleteButton' (click)="deleteTodo()">Delete</button>
+      </div>
+      <button 
+        (click)="viewTodo()">
+        View
+      </button>
+    </div>
+  </div>
+
+  <app-todo-view 
+    [onClose]="handleClose.bind(this)"
+    [title]="title"
+    *ngIf="open.view"
+    [description]="description">
+  </app-todo-view>
+
+  <app-todo-edit 
+    [onClose]="handleClose.bind(this)"
+    [title]="title" 
+    *ngIf="open.edit"
+    [description]="description"
+    [id]="id">
+  </app-todo-edit>
+</div>

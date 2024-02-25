@@ -1,0 +1,9 @@
+<div class='modal-container' (click)="handleClose($event)">
+  <div class='modal'>
+    <div class='modal__head'>
+      <h2>{{modalLable}}</h2>
+      <span class='modal__close' (click)="onClose()">x</span>
+    </div>
+    <ng-content></ng-content>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+<app-modal modalLable='Edit' [onClose]="onClose">
+  <form class='todo-form' name='addTodo' (ngSubmit)="editTodo($event)">
+    <input 
+      type='text' 
+      name='title' 
+      [(ngModel)]="title"
+      (ngModelChange)="title = $event.toUpperCase()"
+      placeholder='Enter title'/>
+    <textarea 
+      placeholder='Enter todo decription'
+      name="description"
+     [(ngModel)]="description"></textarea>
+    <button type='submit'>Done</button>
+  </form> 
+</app-modal>

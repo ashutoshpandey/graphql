@@ -1,8 +1,10 @@
 
-const { TodoType, Todos, TodoSubscriptionType } = require('./todoData');
-const { GraphQLObjectType, GraphQLList, GraphQLNonNull } = require('graphql');
 const { PubSub } = require('graphql-subscriptions');
-const { GraphQLInt, GraphQLString, GraphQLBoolean } = require('graphql')
+const { GraphQLInt, GraphQLString, GraphQLBoolean } = require('graphql');
+const { GraphQLObjectType, GraphQLList, GraphQLNonNull } = require('graphql');
+
+const { TodoType, Todos, TodoSubscriptionType } = require('./todoData');
+
 const pubsub = new PubSub();
 
 const RootQueryType = new GraphQLObjectType({
@@ -13,8 +15,20 @@ const RootQueryType = new GraphQLObjectType({
             type: new GraphQLList(TodoType),
             resolve: () => Todos
         },
+        getTodoById: { // New query for fetching a Todo by ID
+            type: TodoType, // Assuming TodoType is a GraphQLObjectType representing a Todo item
+            description: 'A Single Todo',
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID) } // Define the argument for the query
+            },
+            resolve: (parent, args) => {
+                // Implement the logic to find a Todo by its ID
+                // For example, assuming Todos is an array of todo items
+                return Todos.find(todo => todo.id === args.id);
+            }
+        },
     })
-})
+});
 
 const RootMutationType = new GraphQLObjectType({
     name: 'Mutation',
@@ -38,15 +52,17 @@ const RootMutationType = new GraphQLObjectType({
                     description: args.description,
                     completed: false,
                 }
-                Todos.unshift(todo)
+
+                Todos.unshift(todo);
 
                 pubsub.publish('TODO', {
                     todo: {
                         mutation: 'CREATED',
                         data: todo
                     }
-                })
-                return todo
+                });
+
+                return todo;
             }
         },
         updateTodo: {
@@ -110,7 +126,7 @@ const RootMutationType = new GraphQLObjectType({
             }
         },
     })
-})
+});
 
 const RootSubscriptionType = new GraphQLObjectType({
     name: 'Subscription',
@@ -121,6 +137,6 @@ const RootSubscriptionType = new GraphQLObjectType({
             subscribe: () => pubsub.asyncIterator(['TODO'])
         },
     }),
-})
+});
 
 module.exports = { RootQueryType, RootMutationType, RootSubscriptionType }
